@@ -1,6 +1,7 @@
 import classes from "./MainHeader.module.scss";
-import { Link } from "react-router-dom";
+import { Link,NavLink } from "react-router-dom";
 import { FaShoppingCart } from "react-icons/fa";
+import {FaTimes} from 'react-icons/fa'
 import { HiOutlineMenuAlt3 } from "react-icons/hi";
 // import {HiOutlineMenuAlt3} from 'react-icons/hi'
 import { useState } from "react";
@@ -36,6 +37,11 @@ const MainHeader = () => {
     setShowMenu(false);
   };
 
+
+  const navDataHandler =(navData)=>{
+    return navData.isActive ? classes.active : ''
+  };
+
   return (
     <header>
       <div className={classes.header}>
@@ -51,18 +57,22 @@ const MainHeader = () => {
                 : `${classes["nav-wrapper"]}`
             } onClick={hideMenuHandler}> </div>
             <ul onClick={hideMenuHandler}>
-              <li>
-                <Link to={"/"}>Home</Link>
+              <li className={ classes['logo-mobile']}>
+                {logo}
+                <FaTimes  size={22} color="#fff"  onClick={hideMenuHandler}/>
               </li>
               <li>
-                <Link to={"/contact"}>Contact Us</Link>
+                <NavLink to={"/"} className={navDataHandler}>Home</NavLink>
+              </li>
+              <li>
+                <NavLink to={"/contact"} className={navDataHandler}>Contact Us</NavLink>
               </li>
             </ul>
             <div className={classes["header-right"]} onClick={hideMenuHandler}>
               <span className={classes.links}>
-                <Link to={"/login"}>Login</Link>
-                <Link to={"/register"}>Register</Link>
-                <Link to={"/order-history"}>My Orders</Link>
+                <NavLink to={"/login"}className={navDataHandler} >Login</NavLink>
+                <NavLink to={"/register"}className={navDataHandler}>Register</NavLink>
+                <NavLink to={"/order-history"}className={navDataHandler}>My Orders</NavLink>
               </span>
 
               {/* http://react-icons.github.io/react-icons/search  1hr16mins in the course*/}
