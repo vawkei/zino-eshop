@@ -30,7 +30,7 @@ const Register = () => {
         </Card>
 
         <div className={classes.img}>
-          <img src={registerImage} width={400} alt="Log" />
+          <img src={registerImage} width={400} alt="register" />
         </div>
       </section>
      );

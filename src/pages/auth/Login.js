@@ -4,7 +4,10 @@ import { Link } from "react-router-dom";
 import { FaGoogle } from "react-icons/fa";
 import Card from "../../components/ui/Card";
 
+
 const Login = () => {
+
+
   return (
     <section className={`${classes.auth} section`}>
       <div className={classes.img}>
