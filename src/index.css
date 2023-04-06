@@ -29,6 +29,7 @@ code {
 
   --color-primary: #007bff;
   --color-success: #28a745;
+  --color-danger: orangered;
 }
 
 * {

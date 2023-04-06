@@ -6,6 +6,9 @@ import ContactPage from "./pages/ContactPage";
 import OrderHistoryPage from "./pages/OrderHistoryPage";
 import CartPage from "./pages/CartPage"
 import AdminPage from "./pages/AdminPage";
+import Login from "./pages/auth/Login";
+import Register from "./pages/auth/Register";
+import Reset from "./pages/auth/Reset";
 
 
 
@@ -19,6 +22,10 @@ function App() {
         <Route   path="/order-history"   element={<OrderHistoryPage />}/>
         <Route   path="/cart"   element={<CartPage/>}/>
         <Route   path="/admin"   element={< AdminPage/>}  />
+        <Route   path="/login" element= {<Login/>} />
+        <Route   path="/register" element = {<Register/>} />
+        <Route   path="/reset" element={<Reset/>} />
+
       </Routes>
     </Layout>
   );
