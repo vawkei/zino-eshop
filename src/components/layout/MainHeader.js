@@ -1,10 +1,12 @@
 import classes from "./MainHeader.module.scss";
-import { Link,NavLink } from "react-router-dom";
+import { Link,NavLink,useNavigate } from "react-router-dom";
 import { FaShoppingCart } from "react-icons/fa";
 import {FaTimes} from 'react-icons/fa'
 import { HiOutlineMenuAlt3 } from "react-icons/hi";
-// import {HiOutlineMenuAlt3} from 'react-icons/hi'
+import {  signOut } from "firebase/auth"
 import { useState } from "react";
+import { auth } from "../../firebase/config";
+import { toast } from "react-toastify";
 
 const MainHeader = () => {
   const logo = (
@@ -29,6 +31,8 @@ const MainHeader = () => {
   );
 
   const [showMenu, setShowMenu] = useState(false);
+  const navigate = useNavigate();  
+
 
   const toggleMenuHandler = () => {
     setShowMenu((prevState) => !prevState);
@@ -37,6 +41,15 @@ const MainHeader = () => {
     setShowMenu(false);
   };
 
+  const logOutUser = ()=>{
+    
+    signOut(auth).then(() => {
+      toast.success('Logout Successful')
+      navigate('/')
+    }).catch((error) => {
+      toast.error("error.message")
+    })
+  }
 
   const navDataHandler =(navData)=>{
     return navData.isActive ? classes.active : ''
@@ -73,6 +86,7 @@ const MainHeader = () => {
                 <NavLink to={"/login"}className={navDataHandler} >Login</NavLink>
                 <NavLink to={"/register"}className={navDataHandler}>Register</NavLink>
                 <NavLink to={"/order-history"}className={navDataHandler}>My Orders</NavLink>
+                <NavLink to={"/"} onClick={logOutUser}>Logout</NavLink>
               </span>
 
               {/* http://react-icons.github.io/react-icons/search  1hr16mins in the course*/}
