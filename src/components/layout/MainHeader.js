@@ -1,12 +1,14 @@
 import classes from "./MainHeader.module.scss";
 import { Link,NavLink,useNavigate } from "react-router-dom";
-import { FaShoppingCart } from "react-icons/fa";
+import { FaShoppingCart, FaUserCircle } from "react-icons/fa";
 import {FaTimes} from 'react-icons/fa'
 import { HiOutlineMenuAlt3 } from "react-icons/hi";
-import {  signOut } from "firebase/auth"
-import { useState } from "react";
+import {  onAuthStateChanged, signOut } from "firebase/auth"
+import { useEffect, useState } from "react";
 import { auth } from "../../firebase/config";
 import { toast } from "react-toastify";
+import { useDispatch,useSelector } from "react-redux";
+import { authActions } from "../../store/index";
 
 const MainHeader = () => {
   const logo = (
@@ -31,8 +33,29 @@ const MainHeader = () => {
   );
 
   const [showMenu, setShowMenu] = useState(false);
+  const [displayName, setDisplayName] = useState('');
   const navigate = useNavigate();  
+    const dispatch = useDispatch();
 
+  useEffect(()=>{
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        console.log(user) //gives us every property of the user
+        //const uid = user.uid;
+        //console.log(user.displayName);
+        setDisplayName(user.displayName);
+        dispatch(authActions.setActiveUser({//4hrs39mins
+          email:user.email,
+          userName:user.displayName,
+          userId:user.uid
+        }))
+      } else {
+        // User is signed out
+        setDisplayName("")
+      }
+    });
+    
+  },[])
 
   const toggleMenuHandler = () => {
     setShowMenu((prevState) => !prevState);
@@ -49,7 +72,9 @@ const MainHeader = () => {
     }).catch((error) => {
       toast.error("error.message")
     })
-  }
+  };
+
+
 
   const navDataHandler =(navData)=>{
     return navData.isActive ? classes.active : ''
@@ -84,6 +109,7 @@ const MainHeader = () => {
             <div className={classes["header-right"]} onClick={hideMenuHandler}>
               <span className={classes.links}>
                 <NavLink to={"/login"}className={navDataHandler} >Login</NavLink>
+                <a href="#"> <FaUserCircle size={16} />Hi, {displayName} </a>
                 <NavLink to={"/register"}className={navDataHandler}>Register</NavLink>
                 <NavLink to={"/order-history"}className={navDataHandler}>My Orders</NavLink>
                 <NavLink to={"/"} onClick={logOutUser}>Logout</NavLink>
