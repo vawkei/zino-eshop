@@ -43,15 +43,37 @@ const MainHeader = () => {
         console.log(user) //gives us every property of the user
         //const uid = user.uid;
         //console.log(user.displayName);
-        setDisplayName(user.displayName);
+        if(user.displayName === null){
+          //const u1= user.email.slice(0,-10)//cutsoff the last ten letters of the word
+          //const uName = u1.toUpperCase()
+          //console.log(uName)converts everyletter to capital
+          
+          //const uNameII = u1.charAt(0).toUpperCase() + u1.slice(1)
+          //console.log(uNameII)
+
+          //Or Better still go with "split" instead of "slice":
+          const user1 = user.email.split("@");
+          //console.log(user1)//this gives a string ["test","gmail.com"]
+          const userName = user1[0]
+         // console.log(userName);
+          const userName2 = userName.charAt(0).toUpperCase() + userName.slice(1)
+         // console.log(userName2);
+
+          setDisplayName(userName2);
+          
+        }else{
+          setDisplayName(user.displayName)
+        };
+
         dispatch(authActions.setActiveUser({//4hrs39mins
           email:user.email,
-          userName:user.displayName,
+          userName:user.displayName ? user.displayName : displayName,
           userId:user.uid
         }))
       } else {
         // User is signed out
-        setDisplayName("")
+        setDisplayName("");
+        dispatch(authActions.clearActiveUser());//what this means is, everytime you load a page,and the user isnt loggedin , this fuction is gonna run and make sure no user is saved in the console.And if there's a user,and you log out,it will remove the active user.;
       }
     });
     
