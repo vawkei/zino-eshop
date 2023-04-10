@@ -19,7 +19,7 @@ const authSlice = createSlice({
             state.userName= action.payload.userName;
             state.userId= action.payload.userId  
         },
-        clearActiveUser(state,action){
+        clearUser(state){
             state.isLoggedIn=false;
             console.log(state.isLoggedIn)
             state.email = '';
