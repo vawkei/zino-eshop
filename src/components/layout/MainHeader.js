@@ -95,7 +95,7 @@ const MainHeader = () => {
       toast.success('Logout Successful')
       navigate('/')
     }).catch((error) => {
-      toast.error("error.message")
+      toast.error(error.message)
     })
   };
 
