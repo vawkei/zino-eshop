@@ -23,11 +23,11 @@ const Reset = () => {
     sendPasswordResetEmail(auth, email)
   .then(() => {
     
-    toast('Check your Mail for Reset Link')
+    toast.success('Check your Mail for Reset Link')
     setIsLoading(false)
   })
   .catch((error) => {
-    toast(error.message)
+    toast.error(error.message)
     setIsLoading(false)
   });
   }
