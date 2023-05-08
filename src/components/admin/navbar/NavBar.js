@@ -29,7 +29,7 @@ const NavBar = () => {
             </NavLink>
           </li>
           <li>
-            <NavLink className={NavDataHandler} to={"/admin/add-product"}>
+            <NavLink className={NavDataHandler} to={"/admin/add-product/ADDNEWPRODUCT"}>
               Add Product
             </NavLink>
           </li>

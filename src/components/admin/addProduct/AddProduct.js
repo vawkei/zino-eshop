@@ -6,12 +6,15 @@ import {
   getStorage,
   getDownloadURL,
   uploadBytesResumable,
+  deleteObject,
 } from "firebase/storage";
 import { storage, db } from "../../../firebase/config";
 import { toast } from "react-toastify";
-import { Timestamp, addDoc, collection } from "firebase/firestore";
-import { useNavigate } from "react-router-dom";
-import Loader from '../../loader/Loader'
+import { Timestamp, addDoc, collection, doc, setDoc } from "firebase/firestore";
+import { useNavigate, useParams } from "react-router-dom";
+import Loader from "../../loader/Loader";
+
+import { useSelector } from "react-redux";
 
 const categories = [
   { id: "p1", name: "Laptop" },
@@ -21,6 +24,9 @@ const categories = [
 ];
 
 const AddProduct = () => {
+  const { id } = useParams();
+  // console.log(id);The id enables us to get the product id gotten through the url
+
   // const initialState = {
   //   name: "",
   //   imageUrl: "",
@@ -30,18 +36,58 @@ const AddProduct = () => {
   //   description: "",
   // };
 
-  const [product, setProduct] = useState({
-    name: "",
-    imageUrl: "",
-    price: 0,
-    category: "",
-    brand: "",
-    description: "",
+  const products = useSelector((state) => state.products.products);
+
+  const productEdit = products.find((item) => {
+    return item.id === id;
+  });
+  console.log(productEdit);
+
+  const detectForm = (id, f1, f2) => {
+    if (id === "ADDNEWPRODUCT") {
+      return f1;
+    } else {
+      return f2;
+    }
+    //we want to use the detectform function to work, based on the params it receives
+  };
+
+  // const [product, setProduct] = useState({
+  //   name: "",
+  //   imageUrl: "",
+  //   price: 0,
+  //   category: "",
+  //   brand: "",
+  //   description: "",
+  // });
+
+  const [product, setProduct] = useState(() => {
+    const newState = detectForm(
+      id,
+      {
+        name: "",
+        imageUrl: "",
+        price: 0,
+        category: "",
+        brand: "",
+        description: "",
+      },
+      productEdit
+    );
+    return newState;
   });
 
   const [uploadProgress, setupLoadProgress] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+
+  // const detectForm =(id, f1, f2)=>{
+  //   if(id==='ADDNEWPRODUCT'){
+  //     return f1
+  //   }
+  //   return f2;
+  //   //we want to use the detectform function to work, based on the params it receives
+  // }
 
   const handleInputChange = (e) => {
     // setProduct(e.target.value);
@@ -118,13 +164,47 @@ const AddProduct = () => {
     }
   };
 
+  function editProduct(e) {
+    e.preventDefault();
+    setIsLoading(true);
+
+    if(product.imageUrl !== productEdit.imageUrl){
+      const storageRef = ref(storage, productEdit.imageUrl);
+       deleteObject(storageRef);
+    }
+
+    try {
+      // add_doc just adds a new document to the database. But SETDOC, it will look at the database
+      //for a particular document and it will update the document with the new data u r sending
+      
+      setDoc(doc(db, "products", id), {
+        name: product.name,
+        imageUrl: product.imageUrl,
+        price: Number(product.price),
+        category: product.category,
+        brand: product.brand,
+        description: product.description,
+        createdAt: productEdit.createdAt,
+        editedAt:Timestamp.now().toDate()
+      });
+      setIsLoading(false);
+      toast.success('Product edited successfully')
+      navigate('/admin/all-products')
+    } catch (error) {
+      toast.error(error.message);
+      setIsLoading(false);
+    }
+  }
+
   return (
     <Fragment>
-      {isLoading && <Loader/>}
+      {isLoading && <Loader />}
       <div className={classes.product}>
-        <h1>Add New Products</h1>
+        {/* <h1>Add New Products</h1> */}
+        <h2>{detectForm(id, "Add New Product", "Edit Product")}</h2>
         <Card className={classes.card}>
-          <form action="" onSubmit={addProduct}>
+          {/* <form action="" onSubmit={addProduct}> */}
+          <form action="" onSubmit={detectForm(id, addProduct, editProduct)}>
             <label htmlFor="">Product name</label>
             <input
               type="text"
@@ -216,7 +296,10 @@ const AddProduct = () => {
               onChange={handleInputChange}
               rows="5"></textarea>
 
-            <button className="--btn --btn-primary">Save Product</button>
+            {/* <button className="--btn --btn-primary">Save Product</button> */}
+            <button className="--btn --btn-primary">
+              {detectForm(id, "Save Product", "Edit Product")}
+            </button>
           </form>
         </Card>
       </div>

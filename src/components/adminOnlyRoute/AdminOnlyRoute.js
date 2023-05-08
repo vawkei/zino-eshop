@@ -30,7 +30,7 @@ const AdminOnlyRoute = (props) => {
 };
 export const AdminOnlyLink = (props) => {
     const userEmail = useSelector((state)=>state.auth.email);
-    console.log(userEmail);
+    //console.log(userEmail);
 
     if (userEmail === "test@gmail.com") {
         return props.children;
