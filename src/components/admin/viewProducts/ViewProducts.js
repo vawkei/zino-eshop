@@ -1,6 +1,6 @@
 import { Fragment, useEffect, useState } from "react";
 import classes from "./ViewProducts.module.scss";
-import { Zoom, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import { db, storage } from "../../../firebase/config";
 import {
   collection,
@@ -16,62 +16,80 @@ import Notiflix from "notiflix";
 
 import Loader from "../../loader/Loader";
 import { deleteObject, ref } from "firebase/storage";
-import { useDispatch } from "react-redux";
+import { useDispatch,useSelector } from "react-redux";
 import { productsAction } from "../../../store";
+import useFetchCollection from "../../../customHooks/useFetchCollection";
+
 
 const ViewProducts = () => {
-  const [products, setProducts] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const { data:data, isLoading } = useFetchCollection("products");
+  const products = useSelector((state)=>state.products.products);
+
+  // const [products, setProducts] = useState([]);
+  // const [isLoading, setIsLoading] = useState(false);
 
   const dispatch = useDispatch();
 
   useEffect(() => {
-    getProducts();
-  }, []);
+    dispatch(
+      productsAction.STORE_PRODUCTS({
+        products: data
+        .map((product) => ({
+          ...product,
+          createdAt: new Date(product.createdAt.seconds * 1000).toDateString(),
+          editedAt: new Date(product.createdAt.seconds * 1000).toDateString(),
+        })),
+      })
+    );
+  },[dispatch,data]);
 
-  const getProducts = () => {
-    setIsLoading(true);
+  // useEffect(() => {
+  //   getProducts();
+  // }, []);
+  
+  // const getProducts = () => {
+  //   setIsLoading(true);
 
-    try {
-      // const citiesRef = collection(db, "cities");
-      const productsRef = collection(db, "products");
-      //   const q = query(citiesRef, orderBy("name", "desc"))
-      const q = query(productsRef, orderBy("createdAt", "desc"));
+  //   try {
+  //     // const citiesRef = collection(db, "cities");
+  //     const productsRef = collection(db, "products");
+  //     //   const q = query(citiesRef, orderBy("name", "desc"))
+  //     const q = query(productsRef, orderBy("createdAt", "desc"));
 
-      onSnapshot(q, (snapshot) => {
-        //console.log(snapshot)
-        //console.log(snapshot.docs)
+  //     onSnapshot(q, (snapshot) => {
+  //       //console.log(snapshot)
+  //       //console.log(snapshot.docs)
 
-        const allProducts = snapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
-        //console.log(allProducts);
-        setProducts(allProducts);
-        setIsLoading(false);
-        dispatch(
-          productsAction.STORE_PRODUCTS({
-            products: allProducts.map((product) => ({
-              ...product,
-              createdAt: new Date(product.createdAt.seconds * 1000).toDateString(),
-              editedAt: new Date(product.createdAt.seconds * 1000).toDateString(),
-              
-            }))
-          })
-        );
-        //The map() method is used to iterate over each object in the "allProducts" array and convert the "createdAt" property, which is a Firebase timestamp, into a human-readable date format using the toDateString() method. The resulting array contains only the date strings.
+  //       const allProducts = snapshot.docs.map((doc) => ({
+  //         id: doc.id,
+  //         ...doc.data(),
+  //       }));
+  //       //console.log(allProducts);
+  //       setProducts(allProducts);
+  //       setIsLoading(false);
+  //       dispatch(
+  //         productsAction.STORE_PRODUCTS({
+  //           products: allProducts.map((product) => ({
+  //             ...product,
+  //             createdAt: new Date(product.createdAt.seconds * 1000).toDateString(),
+  //             editedAt: new Date(product.createdAt.seconds * 1000).toDateString(),
 
-        // So essentially, this line of code maps over the allProducts array to extract the createdAt timestamp and convert it to a human-readable format using the toDateString() method. The resulting array of dates is then passed as the products property of the action payload to the STORE_PRODUCTS reducer function, which will update the products state in the Redux store.
+  //           }))
+  //         })
+  //       );
+  //       //The map() method is used to iterate over each object in the "allProducts" array and convert the "createdAt" property, which is a Firebase timestamp, into a human-readable date format using the toDateString() method. The resulting array contains only the date strings.
 
-        //         After "allProducts" is updated, the "STORE_PRODUCTS" action is dispatched using the Redux "dispatch" function. This action stores the "allProducts" array in the Redux store, with each object in the array having its "createdAt" property converted to a serializable format using the JavaScript Date object's toDateString() method.
+  //       // So essentially, this line of code maps over the allProducts array to extract the createdAt timestamp and convert it to a human-readable format using the toDateString() method. The resulting array of dates is then passed as the products property of the action payload to the STORE_PRODUCTS reducer function, which will update the products state in the Redux store.
 
-        // By dispatching this action, any component that is subscribed to the Redux store can access the latest version of the "products" array with the updated "createdAt" properties
-      });
-    } catch (error) {
-      setIsLoading(false);
-      toast.error(error.message);
-    }
-  };
+  //       //         After "allProducts" is updated, the "STORE_PRODUCTS" action is dispatched using the Redux "dispatch" function. This action stores the "allProducts" array in the Redux store, with each object in the array having its "createdAt" property converted to a serializable format using the JavaScript Date object's toDateString() method.
+
+  //       // By dispatching this action, any component that is subscribed to the Redux store can access the latest version of the "products" array with the updated "createdAt" properties
+  //     });
+  //   } catch (error) {
+  //     setIsLoading(false);
+  //     toast.error(error.message);
+  //   }
+  // };
 
   function confirmDelete(id, imageUrl) {
     Notiflix.Confirm.show(
