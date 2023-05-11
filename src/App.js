@@ -12,6 +12,7 @@ import Reset from "./pages/auth/Reset";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import AdminOnlyRoute from "./components/adminOnlyRoute/AdminOnlyRoute";
+import ProductDetails from './components/products/productDetails/ProductDetails'
 
 function App() {
   return (
@@ -20,8 +21,9 @@ function App() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/contact" element={<ContactPage />} />
-        <Route path="/order-history" element={<OrderHistoryPage />} />
-        <Route path="/cart" element={<CartPage />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/reset" element={<Reset />} />
+
         <Route
           path="/admin/*"
           element={
@@ -30,10 +32,12 @@ function App() {
             </AdminOnlyRoute>
           }
         />
-        <Route path="/login" element={<Login />} />
+        
+        <Route path="/product-details/:id" element={<ProductDetails/>} />
         <Route path="/register" element={<Register />} />
-        <Route path="/reset" element={<Reset />} />
-        {/* <Routes   path="/reset" element={<Reset/>} /> */}
+        <Route path="/order-history" element={<OrderHistoryPage />} />
+        <Route path="/cart" element={<CartPage />} />
+        
       </Routes>
     </Layout>
   );

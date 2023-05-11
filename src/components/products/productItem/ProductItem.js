@@ -32,7 +32,7 @@ const ProductItem = (props) => {
   return (
     <Card className={ props.grid ? `${classes.grid}` : `${classes.list}`}>
     
-      <Link to={"/product-details"}>
+      <Link to={`/product-details/${props.id}`}>
         <div className={classes.img}>
           <img src={props.imageUrl} alt={props.name} /> 
         </div>
@@ -44,6 +44,8 @@ const ProductItem = (props) => {
           <h4>{shortenText(props.name, 15)}</h4>
         </div>
         {!props.grid && <p >{shortenText(props.description,200)}</p>}
+
+        <button className="--btn --btn-danger">Add to cart</button>
       </div>
     </Card>
   );

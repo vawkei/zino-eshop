@@ -1,21 +1,47 @@
 import classes from "./ProductList.module.scss";
 import { BsFillGridFill } from "react-icons/bs";
 import { FaListAlt } from "react-icons/fa";
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import Search from "../../search/Search";
 import ProductItem from "../productItem/ProductItem";
+import { useDispatch, useSelector } from "react-redux";
+import { filterAction } from "../../../store";
 
 const ProductList = (props) => {
   const [grid, setGrid] = useState(true);
   const [search, setSearch] = useState("");
 
-  // const gridHandlerTrue = () => {
-  //   setGrid(true);
-  // };
+  const filteredProducts = useSelector(
+    (state) => state.filter.filteredProducts
+  );
 
-  // const gridHandlerFalse = () => {
-  //   setGrid(false);
-  // };
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(
+      filterAction.FILTER_BY_SEARCH({
+        products: props.products.map((product) => {
+          return {
+            ...product,
+            createdAt: new Date(
+              product.createdAt.seconds * 1000
+            ).toDateString(),
+            editedAt: new Date(product.createdAt.seconds * 1000).toDateString(),
+          };
+        }),
+        search: search,
+      })
+    );
+    console.log(search)
+  }, [dispatch, props.products,search]);
+
+  const gridHandlerTrue = () => {
+    setGrid(true);
+  };
+
+  const gridHandlerFalse = () => {
+    setGrid(false);
+  };
 
   const searchChangeHandler = (e) => {
     setSearch(e.target.value);
@@ -28,9 +54,9 @@ const ProductList = (props) => {
           <BsFillGridFill
             size={22}
             color={"orangered"}
-            onClick={()=>setGrid(true)}
+            onClick={gridHandlerTrue}
           />
-          <FaListAlt size={24} color={"#0066d4"} onClick={()=>setGrid(false)} />
+          <FaListAlt size={24} color={"#0066d4"} onClick={gridHandlerFalse} />
           <p>
             <b>10</b> Products found
           </p>
@@ -55,22 +81,22 @@ const ProductList = (props) => {
           <p>No products found</p>
         ) : (
           <Fragment>
-            {props.products.map((product) => {
+            {/* {props.products.map((product) => {this was before filteredproducts */}
+            {filteredProducts.map((product) => {
               return (
-                <div key={product.id}>
                 <ProductItem
-                  // key={product.id}
+                  key={product.id}
+                  id={product.id}
                   name={product.name}
                   description={product.description}
                   price={product.price}
-                  imageUrl= {product.imageUrl}
-                  category= {product.category}
-                  brand= {product.brand}
-                  createdAt= {product.createdAt}
-                  grid= {grid}
+                  imageUrl={product.imageUrl}
+                  category={product.category}
+                  brand={product.brand}
+                  createdAt={product.createdAt}
+                  grid={grid}
                   product={product}
                 />
-                </div>
               );
             })}
           </Fragment>
