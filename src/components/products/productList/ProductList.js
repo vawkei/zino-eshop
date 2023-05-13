@@ -6,13 +6,42 @@ import Search from "../../search/Search";
 import ProductItem from "../productItem/ProductItem";
 import { useDispatch, useSelector } from "react-redux";
 import { filterAction } from "../../../store";
+import Pagination from "../../pagination/Pagination";
 
 const ProductList = (props) => {
   const [grid, setGrid] = useState(true);
   const [search, setSearch] = useState("");
+  const [sort, setSort] = useState("latest");
+
+  const gridHandlerTrue = () => {
+    setGrid(true);
+  };
+
+  const gridHandlerFalse = () => {
+    setGrid(false);
+  };
+
+  const searchChangeHandler = (e) => {
+    setSearch(e.target.value);
+  };
+
+  const sortChangeHandler = (e) => {
+    setSort(e.target.value);
+  };
 
   const filteredProducts = useSelector(
     (state) => state.filter.filteredProducts
+  );
+
+  //PaginationState:
+  const [currentPage, setCurrentPage] = useState(1);
+  const [productsPerPage, setProductsPerPage] = useState(1);
+  //Get Current Products:
+  const indexOfLastProduct = currentPage * productsPerPage;
+  const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
+  const currentProducts = filteredProducts.slice(
+    indexOfFirstProduct,
+    indexOfLastProduct
   );
 
   const dispatch = useDispatch();
@@ -32,20 +61,26 @@ const ProductList = (props) => {
         search: search,
       })
     );
-    console.log(search)
-  }, [dispatch, props.products,search]);
+    console.log(search);
+  }, [dispatch, props.products, search]);
 
-  const gridHandlerTrue = () => {
-    setGrid(true);
-  };
-
-  const gridHandlerFalse = () => {
-    setGrid(false);
-  };
-
-  const searchChangeHandler = (e) => {
-    setSearch(e.target.value);
-  };
+  useEffect(() => {
+    dispatch(
+      filterAction.SORT_PRODUCT({
+        products: props.products.map((product) => {
+          return {
+            ...product,
+            createdAt: new Date(
+              product.createdAt.seconds * 1000
+            ).toDateString(),
+            editedAt: new Date(product.createdAt.seconds * 1000).toDateString(),
+          };
+        }),
+        sort: sort,
+      })
+    );
+    //console.log(sort)
+  }, [dispatch, props.products, sort]);
 
   return (
     <div className={classes["product-list"]} id="product">
@@ -58,7 +93,7 @@ const ProductList = (props) => {
           />
           <FaListAlt size={24} color={"#0066d4"} onClick={gridHandlerFalse} />
           <p>
-            <b>10</b> Products found
+            <b>{filteredProducts.length}</b> Products found
           </p>
         </div>
         <div>
@@ -66,7 +101,7 @@ const ProductList = (props) => {
         </div>
         <div className={classes.sort}>
           <label htmlFor="">Sort by:</label>
-          <select>
+          <select value={sort} onChange={sortChangeHandler}>
             <option value="latest">Latest</option>
             <option value="lowest-price">Lowest price</option>
             <option value="highest-price">Highest price</option>
@@ -102,6 +137,12 @@ const ProductList = (props) => {
           </Fragment>
         )}
       </div>
+      <Pagination
+        productsPerPage={productsPerPage}
+        currentPage={currentPage}
+        setCurrentPage={setCurrentPage}
+        totalProducts = {filteredProducts.length}
+      />
     </div>
   );
 };
