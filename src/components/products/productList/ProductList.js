@@ -35,7 +35,7 @@ const ProductList = (props) => {
 
   //PaginationState:
   const [currentPage, setCurrentPage] = useState(1);
-  const [productsPerPage, setProductsPerPage] = useState(1);
+  const [productsPerPage, setProductsPerPage] = useState(9);
   //Get Current Products:
   const indexOfLastProduct = currentPage * productsPerPage;
   const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
@@ -117,7 +117,8 @@ const ProductList = (props) => {
         ) : (
           <Fragment>
             {/* {props.products.map((product) => {this was before filteredproducts */}
-            {filteredProducts.map((product) => {
+            {/* {filteredProducts.map((product) => {this was before pagination */}
+            {currentProducts.map((product) => {
               return (
                 <ProductItem
                   key={product.id}

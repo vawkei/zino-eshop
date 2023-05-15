@@ -1,6 +1,9 @@
 import classes from "./ProductItem.module.scss";
 import Card from "../../ui/Card";
 import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { cartAction } from "../../../store";
+
 
 const ProductItem = (props) => {
   
@@ -26,6 +29,12 @@ const ProductItem = (props) => {
     return text;
   };
 
+  const dispatch = useDispatch();
+  const product = props.product;
+
+  const addToCartHandler = ()=>{
+    dispatch(cartAction.Add_To_Cart(product))
+  }
 
   //console.log(props.description)
 
@@ -45,7 +54,7 @@ const ProductItem = (props) => {
         </div>
         {!props.grid && <p >{shortenText(props.description,200)}</p>}
 
-        <button className="--btn --btn-danger">Add to cart</button>
+        <button className="--btn --btn-danger" onClick={addToCartHandler}>Add to cart</button>
       </div>
     </Card>
   );
