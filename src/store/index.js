@@ -168,6 +168,7 @@ const initialCartState = {
    cartItems: [],
   cartTotalQty: 0,
   cartTotalAmnt: 0,
+  prevUrl:''
 };
 
 // const storedCartItems = localStorage.getItem('cartItems');
@@ -192,7 +193,7 @@ const cartSlice = createSlice({
       if (!existingItem) {
         state.cartTotalQty++;
         state.cartItems.push({ ...action.payload, quantity: 1 });
-        console.log(`${action.payload.name} added to cart`);
+        //console.log(`${action.payload.name} added to cart`);
         toast.success(`${action.payload.name} added to cart`, {
           position: "top-left",
         });
@@ -218,6 +219,54 @@ const cartSlice = createSlice({
           existingItem.quantity =  existingItem.quantity -1
         }
 
+      },
+      REMOVE_FROM_CART(state,action){
+        //console.log(action.payload)
+        const items = action.payload;
+        const itemId = items.id;
+        const existingItem =state.cartItems.find((item)=>item.id ===itemId);
+        if(existingItem){
+          state.cartItems = state.cartItems.filter((item)=>item.id !==itemId)
+        }
+        toast.success(` ${existingItem.name} deleted from cart`,{position:"top-left"})
+      },
+      CLEAR_CART(state,action){
+        //console.log(action.payload)
+        state.cartItems = [];
+      },
+      CALCULATE_SUBTOTAL(state,action){
+        const array = [];
+        state.cartItems.map((item)=>{
+          const{price,quantity} = item;
+          const cartItemAmount = price * quantity;
+          //console.log(cartItemAmount)
+         return array.push(cartItemAmount)
+        })
+        //console.log(array)
+        const totalAmount = array.reduce((curNumber,item)=>{
+          return curNumber + item
+        },0);
+        //console.log(totalAmount)
+        state.cartTotalAmnt = totalAmount
+      },
+      CALCULATE_TOTAL_QTY(state,action){
+        //console.log(action.payload)
+        const array = [];
+        state.cartItems.map((item)=>{
+          const{quantity} = item;
+          const cartQty = quantity;
+          return array.push(cartQty);
+        });
+        const totalQty = array.reduce((curNumber,item)=>{
+          return curNumber + item
+        },0);
+        state.cartTotalQty = totalQty;
+        console.log(state.cartTotalQty)
+
+      },
+      SAVE_URL(state,action){
+        console.log(action.payload)
+        state.prevUrl= action.payload // the url we get frm the frontend we want to save it here
       }
   },
   

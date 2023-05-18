@@ -9,12 +9,38 @@ import { auth } from "../../firebase/config";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import { authActions } from "../../store/index";
-import Admin from "../pages-component/Admin";
+// import Admin from "../pages-component/Admin";
 import AdminOnlyRoute, {
   AdminOnlyLink,
 } from "../adminOnlyRoute/AdminOnlyRoute";
 
+
+
+
 const MainHeader = () => {
+
+  const [showMenu, setShowMenu] = useState(false);
+  const [displayName, setDisplayName] = useState("");
+  const [scrollPage,setScrollPage] = useState(false);
+   const cartTotalQty = useSelector((state)=>state.cart.cartTotalQty);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const showOnLogin = useSelector((state) => state.auth.isLoggedIn);
+  //const showOnLogout = useSelector((state)=>state.auth.isLoggedIn)
+
+ const fixNavBar =()=>{
+  if(window.scrollY < 50){
+    setScrollPage(true)
+  }else{
+    setScrollPage(false);
+  };
+
+  //what this means is, if we have scrolled vertically for mor than 50px, then set scroll page to true else let it be false.
+ };
+
+ window.addEventListener('scroll',fixNavBar);
+
+
   const logo = (
     <div className={classes.logo}>
       <Link to="/">
@@ -31,17 +57,13 @@ const MainHeader = () => {
       <Link to={"/cart"}>
         Cart
         <FaShoppingCart size={20} />
-        <p>0</p>
+        {/* <p>0</p> */}
+        <p>{cartTotalQty}</p>
       </Link>
     </span>
   );
 
-  const [showMenu, setShowMenu] = useState(false);
-  const [displayName, setDisplayName] = useState("");
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const showOnLogin = useSelector((state) => state.auth.isLoggedIn);
-  //const showOnLogout = useSelector((state)=>state.auth.isLoggedIn)
+
 
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
@@ -110,7 +132,7 @@ const MainHeader = () => {
   };
 
   return (
-    <header>
+    <header className={scrollPage ? `${classes.fixed}`:''}>
       <div className={classes.header}>
         {logo}
         <nav

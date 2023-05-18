@@ -13,6 +13,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import AdminOnlyRoute from "./components/adminOnlyRoute/AdminOnlyRoute";
 import ProductDetails from './components/products/productDetails/ProductDetails'
+import CheckoutDetails from "./components/pages-component/checkout/CheckoutDetails";
 
 function App() {
   return (
@@ -37,6 +38,7 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/order-history" element={<OrderHistoryPage />} />
         <Route path="/cart" element={<CartPage />} />
+        <Route path="/checkout-details" element={<CheckoutDetails />} />
         
       </Routes>
     </Layout>

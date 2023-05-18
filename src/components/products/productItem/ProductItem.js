@@ -34,6 +34,7 @@ const ProductItem = (props) => {
 
   const addToCartHandler = ()=>{
     dispatch(cartAction.Add_To_Cart(product))
+    // dispatch(cartAction.CALCULATE_TOTAL_QTY()) not necessary.
   }
 
   //console.log(props.description)
