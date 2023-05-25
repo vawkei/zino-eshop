@@ -2,6 +2,11 @@ import { useState } from "react";
 import classes from "./CheckoutDetails.module.scss";
 import Card from "../../ui/Card";
 import { CountryDropdown } from "react-country-region-selector";
+import {useDispatch} from 'react-redux';
+import { checkoutAction } from "../../../store";
+import {useNavigate} from 'react-router-dom'
+import CheckoutSummary from "../../checkoutSummary/CheckoutSummary";
+
 
 const initialAddressState = {
   name: "",
@@ -20,6 +25,9 @@ const CheckoutDetails = () => {
   const [billingAddress, setBillingAddress] = useState({
     ...initialAddressState,
   });
+  const dispatch = useDispatch();
+  const navigate = useNavigate()
+
 
   const handleShipping = (e) => {
     const{name,value} = e.target;
@@ -29,15 +37,19 @@ const CheckoutDetails = () => {
     const {name,value} = e.target;
     setBillingAddress({...billingAddress,[name]:value})
   };
-  const handleSubmit = (e) => {
+  const submitHandler = (e) => {
     e.preventDefault();
-    console.log({shippingAddress,billingAddress})// so we will have to push our details to redux store to enable us use it anywhere in our application
+    //console.log({shippingAddress,billingAddress})// so we will have to push our details to redux store to enable us use it anywhere in our application
+    
+    dispatch(checkoutAction.SAVE_SHIPPING_ADDRESS(shippingAddress))
+    dispatch(checkoutAction.SAVE_BILLING_ADDRESS(billingAddress));
+    navigate('/checkout')
   };
   return (
     <section>
       <div className={`container ${classes.checkout}`}>
         <h2>Checkout Details</h2>
-        <form action="" onSubmit={handleSubmit}>
+        <form action="" onSubmit={submitHandler}>
           <div>
             <Card className={classes.card}>
               <h3>Shipping Address</h3>
@@ -202,6 +214,12 @@ const CheckoutDetails = () => {
               <button type="submit" className="--btn --btn-primary">Proceed to Checkout</button>
             </Card>
           </div>
+          <div>
+            <Card className={classes.card}>
+              <CheckoutSummary />
+            </Card>
+          </div>
+          
         </form>
       </div>
     </section>

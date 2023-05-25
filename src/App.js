@@ -14,6 +14,8 @@ import "react-toastify/dist/ReactToastify.css";
 import AdminOnlyRoute from "./components/adminOnlyRoute/AdminOnlyRoute";
 import ProductDetails from './components/products/productDetails/ProductDetails'
 import CheckoutDetails from "./components/pages-component/checkout/CheckoutDetails";
+import CheckoutPage from "./pages/CheckoutPage";
+import CheckoutSuccess from "./components/pages-component/checkout/CheckoutSuccess";
 
 function App() {
   return (
@@ -39,7 +41,9 @@ function App() {
         <Route path="/order-history" element={<OrderHistoryPage />} />
         <Route path="/cart" element={<CartPage />} />
         <Route path="/checkout-details" element={<CheckoutDetails />} />
-        
+        <Route path="/checkout" element={<CheckoutPage/>} />
+        <Route path="/checkout-success" element={<CheckoutSuccess />} />
+
       </Routes>
     </Layout>
   );

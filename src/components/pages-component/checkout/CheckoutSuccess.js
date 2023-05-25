@@ -1,9 +1,18 @@
+import { Link } from "react-router-dom";
+
 const CheckoutSuccess = () => {
-    return ( 
-        <div>
-            <h2></h2>
-        </div>
-     );
-}
- 
+  return (
+    <section>
+      <div className="container">
+        <h2>Checkout successful</h2>
+        <p>Thank you for your purchase</p>
+        <br />
+        <Link to={"/order-history"}>
+          <button className="--btn --btn-primary">View Order Status</button>
+        </Link>
+      </div>
+    </section>
+  );
+};
+
 export default CheckoutSuccess;

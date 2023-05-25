@@ -272,12 +272,33 @@ const cartSlice = createSlice({
   
 });
 
+//SLICE :CHECKOUT
+
+const initialCheckoutState = {shippingAddress:'', billingAddress:''};
+
+const checkoutSlice = createSlice({
+  name:'checkout',
+  initialState:initialCheckoutState,
+  reducers:{
+    SAVE_SHIPPING_ADDRESS(state,action){
+      state.shippingAddress= action.payload;
+      console.log(state.shippingAddress);
+    },
+    SAVE_BILLING_ADDRESS(state,action){
+      state.billingAddress = action.payload;
+      console.log(state.billingAddress);
+    }
+  }
+})
+
+
 const store = configureStore({
   reducer: {
     auth: authSlice.reducer,
     products: productSlice.reducer,
     filter: filterSlice.reducer,
     cart: cartSlice.reducer,
+    checkout: checkoutSlice.reducer
   },
 });
 
@@ -285,6 +306,7 @@ export const authActions = authSlice.actions;
 export const productsAction = productSlice.actions;
 export const filterAction = filterSlice.actions;
 export const cartAction = cartSlice.actions;
+export const checkoutAction = checkoutSlice.actions
 
 export default store;
 
