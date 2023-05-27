@@ -7,12 +7,12 @@ import { toast } from 'react-toastify';
 import CheckoutForm from '../../checkoutForm/CheckoutForm';
 
 const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PK);
-console.log(stripePromise);
+// console.log(stripePromise);
 
 const Checkout = () => {
 
     const [clientSecret, setClientSecret] = useState('')
-    const [message, setMessage] = useState('initializing checkout');
+    const [message, setMessage] = useState('initializing checkout...');
 
     const dispatch = useDispatch();
 

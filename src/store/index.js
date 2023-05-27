@@ -291,6 +291,22 @@ const checkoutSlice = createSlice({
   }
 })
 
+//SLICE :ORDERSLICE 
+
+const initialOrderState = {orderHistory:[]};
+
+const orderSlice = createSlice({
+  name:'orders',
+  initialState:initialOrderState,
+  reducers:{
+    STORE_ORDERS(state,action){
+      console.log(action.payload)
+     // state.orderHistory = action.payload
+     const{orders} = action.payload;
+     state.orderHistory = orders
+    }
+  }
+})
 
 const store = configureStore({
   reducer: {
@@ -298,7 +314,8 @@ const store = configureStore({
     products: productSlice.reducer,
     filter: filterSlice.reducer,
     cart: cartSlice.reducer,
-    checkout: checkoutSlice.reducer
+    checkout: checkoutSlice.reducer,
+    orders: orderSlice.reducer
   },
 });
 
@@ -307,6 +324,7 @@ export const productsAction = productSlice.actions;
 export const filterAction = filterSlice.actions;
 export const cartAction = cartSlice.actions;
 export const checkoutAction = checkoutSlice.actions
+export const ordersAction = orderSlice.actions
 
 export default store;
 

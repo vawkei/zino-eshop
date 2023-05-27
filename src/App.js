@@ -16,6 +16,7 @@ import ProductDetails from './components/products/productDetails/ProductDetails'
 import CheckoutDetails from "./components/pages-component/checkout/CheckoutDetails";
 import CheckoutPage from "./pages/CheckoutPage";
 import CheckoutSuccess from "./components/pages-component/checkout/CheckoutSuccess";
+import OrderDetailsPage from "./pages/OrderDetailsPage";
 
 function App() {
   return (
@@ -39,6 +40,7 @@ function App() {
         <Route path="/product-details/:id" element={<ProductDetails/>} />
         <Route path="/register" element={<Register />} />
         <Route path="/order-history" element={<OrderHistoryPage />} />
+        <Route path="/order-details/:id" element={<OrderDetailsPage />} />
         <Route path="/cart" element={<CartPage />} />
         <Route path="/checkout-details" element={<CheckoutDetails />} />
         <Route path="/checkout" element={<CheckoutPage/>} />

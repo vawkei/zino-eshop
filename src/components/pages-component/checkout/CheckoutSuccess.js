@@ -4,12 +4,12 @@ const CheckoutSuccess = () => {
   return (
     <section>
       <div className="container">
-        <h2>Checkout successful</h2>
+        <h2 style={{marginTop:'10rem'}}>Checkout successful</h2>
         <p>Thank you for your purchase</p>
         <br />
-        <Link to={"/order-history"}>
-          <button className="--btn --btn-primary">View Order Status</button>
-        </Link>
+        
+          <button className="--btn --btn-primary"><Link to={"/order-history"}>View Order Status</Link></button>
+        
       </div>
     </section>
   );
