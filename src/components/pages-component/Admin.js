@@ -6,6 +6,7 @@ import Home from '../admin/home/Home'
 import ViewProducts from "../admin/viewProducts/ViewProducts";
 import AddProduct from "../admin/addProduct/AddProduct";
 import Orders from "../admin/orders/Orders";
+import OrderDetails from "../admin/orderDetails/OrderDetails";
 
 const Admin = () => {
   return (
@@ -20,7 +21,7 @@ const Admin = () => {
           <Route path={'all-products'} element={<ViewProducts />} />
           <Route path={'add-product/:id'} element={<AddProduct />} />
           <Route path={'orders'} element={<Orders />} />
-          {/* <Route path={'add-products/:id'} element={<AddProduct />} /> */}
+          <Route path={'order-details/:id'} element={<OrderDetails />} />
         </Routes>
       </div>
     </div>

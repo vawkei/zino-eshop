@@ -17,6 +17,7 @@ import CheckoutDetails from "./components/pages-component/checkout/CheckoutDetai
 import CheckoutPage from "./pages/CheckoutPage";
 import CheckoutSuccess from "./components/pages-component/checkout/CheckoutSuccess";
 import OrderDetailsPage from "./pages/OrderDetailsPage";
+import ReviewProduct from "./components/pages-component/ReviewProduct";
 
 function App() {
   return (
@@ -45,6 +46,7 @@ function App() {
         <Route path="/checkout-details" element={<CheckoutDetails />} />
         <Route path="/checkout" element={<CheckoutPage/>} />
         <Route path="/checkout-success" element={<CheckoutSuccess />} />
+        <Route path="/review-product/:id" element={<ReviewProduct />} />
 
       </Routes>
     </Layout>

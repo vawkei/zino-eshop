@@ -293,7 +293,7 @@ const checkoutSlice = createSlice({
 
 //SLICE :ORDERSLICE 
 
-const initialOrderState = {orderHistory:[]};
+const initialOrderState = {orderHistory:[],totalOrderAmount:0};
 
 const orderSlice = createSlice({
   name:'orders',
@@ -304,6 +304,19 @@ const orderSlice = createSlice({
      // state.orderHistory = action.payload
      const{orders} = action.payload;
      state.orderHistory = orders
+    },
+    CALC_TOTAL_ORDER_AMOUNT(state,action){
+      const array = [];
+        state.orderHistory.map((item)=>{
+          const{orderAmount} = item;
+         return array.push(orderAmount)
+        })
+        //console.log(array)
+        const totalAmount = array.reduce((curNumber,item)=>{
+          return curNumber + item
+        },0);
+        //console.log(totalAmount)
+        state.totalOrderAmount = totalAmount
     }
   }
 })

@@ -2,7 +2,7 @@
 
 
 import classes from "./ProductDetail.module.scss";
-
+import StarsRating from 'react-star-rate'
 import { doc, getDoc } from "firebase/firestore";
 import { Fragment, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
@@ -11,9 +11,18 @@ import { toast } from "react-toastify";
 import spinnerImage from "../../../assets/eshopspinner.jpg";
 import { useDispatch, useSelector } from "react-redux";
 import { cartAction } from "../../../store";
+// import { db, storage } from "../../../firebase/config";
+import {
+  collection,
+  onSnapshot,
+  orderBy,
+  query,
+} from "firebase/firestore";
+import Card from "../../ui/Card";
 
 const ProductDetails = () => {
   const { id } = useParams();
+  const [reviews, setReviews] = useState([]);
   const [product, setProduct] = useState(null);
   const dispatch = useDispatch();
   const cartItems = useSelector((state) => state.cart.cartItems);
@@ -52,8 +61,37 @@ const ProductDetails = () => {
     dispatch(cartAction.CALCULATE_TOTAL_QTY());
   };
 
+
+
+    
+  const filteredReviews = reviews.filter((item)=>item.productID ===id);
+  console.log(filteredReviews)
+
+  const getReviews = () => {
+
+    try {
+      const productsRef = collection(db, "reviews");
+      const q = query(productsRef, orderBy("createdAt", "desc"));
+
+      onSnapshot(q, (snapshot) => {
+        //console.log(snapshot)
+        //console.log(snapshot.docs)
+
+        const allReviews = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        console.log(allReviews);
+        setReviews(allReviews);
+      });
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
   useEffect(() => {
     getSingleProduct();
+    getReviews()
   }, []);
 
   return (
@@ -136,6 +174,26 @@ const ProductDetails = () => {
             </div>
           </Fragment>
         )}
+        <Card className={classes.card}>
+                <h3>Product Review</h3>
+                <div>
+                  {filteredReviews.length === 0 ? <p>No Reviews for this product yet</p> :(
+                    <Fragment>
+                      {filteredReviews.map((item,index)=>{
+                        const {id, rate,review,reviewDate,userName} = item
+                        return(
+                          <div className={classes.review} key={id}> 
+                              <StarsRating value={rate} />
+                              <p>{review}</p>
+                              <span><b>{reviewDate}</b></span> <br />
+                              <span><b> <br /> by {userName}</b></span>
+                          </div>
+                        )
+                      })}
+                    </Fragment>
+                  )}
+                </div>
+        </Card>
       </div>
     </section>
   );
